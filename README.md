@@ -10,6 +10,12 @@ Create a virtual environment for dependencies:
 virtualenv venv
 ```
 
+Install dependencies:
+
+```shell
+pip install -r requirements.txt
+```
+
 Activate it:
 
 ```shell
