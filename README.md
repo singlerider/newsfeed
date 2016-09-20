@@ -2,6 +2,14 @@
 
 ## installation
 
+### configure
+
+```shell
+cp config/config_example.py config/config.py
+```
+
+Then add your YouTube API developer key in the new `config` file.
+
 ### virtual environment
 
 Create a virtual environment for dependencies:

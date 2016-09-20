@@ -2,9 +2,13 @@
 
 import os
 
-import lib.scraper as scraper
 import requests
-from flask import Flask
+
+import lib.scraper as scraper
+from lib.youtube import youtube_search
+from bs4 import BeautifulSoup
+from flask import Flask, render_template, jsonify
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -12,13 +16,21 @@ app = Flask(__name__)
 @app.route("/")
 def render_feed():
     random_feed = scraper.fetch_feed()
-    link = random_feed["link"]
-    title = random_feed["title"]
-    summary = random_feed["summary"]
-    media = random_feed["media_content"]
-    nl = "<br>"
-    return link + nl + title + nl + summary + nl + str(media)
+    data = {
+        "link": random_feed["link"],
+        "title": random_feed["title"],
+        "summary": BeautifulSoup(random_feed["summary"], 'html.parser').prettify(),
+        "media": random_feed["media_content"],
+        "nl": "<br>"
+    }
+    return render_template('index.html', data=data)
 
+
+@app.route("/videos")
+def retrieve_videos():
+    date_string = datetime.now().strftime("%B %d %Y")
+    videos = youtube_search("news " + date_string)
+    return jsonify(videos=videos)
 
 if __name__ == "__main__":
     # This allows us to use a plain HTTP callback
