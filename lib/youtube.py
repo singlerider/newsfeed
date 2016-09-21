@@ -24,13 +24,22 @@ except Exception as error:
 YOUTUBE_API_SERVICE_NAME = "youtube"
 YOUTUBE_API_VERSION = "v3"
 
+# https://www.googleapis.com/youtube/v3/videos?id=9bZkp7q19f0&part=contentDetails&key={YOUR_API_KEY}
+
 
 def youtube_search(search_term):
+    """Retrieve a list of YouTube videos based on a search_term
+
+    Arguments:
+    search_term -- string containing the query for the intended video results
+    """
     max_results = 25
-
-    youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,
-                    developerKey=DEVELOPER_KEY)
-
+    # Create a youtube instance.
+    youtube = build(
+        YOUTUBE_API_SERVICE_NAME,
+        YOUTUBE_API_VERSION,
+        developerKey=DEVELOPER_KEY
+    )
     # Call the search.list method to retrieve results matching the specified
     # query term.
     search_response = youtube.search().list(
@@ -39,9 +48,9 @@ def youtube_search(search_term):
         maxResults=max_results
     ).execute()
 
-    videos = []
-    channels = []
-    playlists = []
+    videos = []  # {[{"_id": _id, "title": "title"}]}
+    channels = []  # {[{"_id": _id, "title": "title"}]}
+    playlists = []  # {[{"_id": _id, "title": "title"}]}
 
     # Add each result to the appropriate list, and then display the lists of
     # matching videos, channels, and playlists.
@@ -70,6 +79,20 @@ def youtube_search(search_term):
         "channels": channels,
         "playlists": playlists
     }
+
+    # Add each result to the appropriate list, and then display the lists of
+    # matching videos, channels, and playlists.
+    ## uncomment the lines below to get video durations
+    # video_response = youtube.videos().list(
+    #     id=",".join([video["_id"] for video in videos]),
+    #     part='snippet, contentDetails'
+    # ).execute()
+    # for index, video in enumerate(results["videos"]):
+    #     duration = video_response["items"][index][
+    #         "contentDetails"]["duration"].replace("PT", "")
+    #     # {[{"_id": _id, "title": "title", "duration": duration}]}
+    #     results["videos"][index]["duration"] = duration
+
     return results
 
 
