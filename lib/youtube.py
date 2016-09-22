@@ -27,7 +27,7 @@ YOUTUBE_API_VERSION = "v3"
 # https://www.googleapis.com/youtube/v3/videos?id=9bZkp7q19f0&part=contentDetails&key={YOUR_API_KEY}
 
 
-def youtube_search(search_term):
+def youtube_search(search_term, get_duration=False):
     """Retrieve a list of YouTube videos based on a search_term
 
     Arguments:
@@ -82,16 +82,17 @@ def youtube_search(search_term):
 
     # Add each result to the appropriate list, and then display the lists of
     # matching videos, channels, and playlists.
-    ## uncomment the lines below to get video durations
-    # video_response = youtube.videos().list(
-    #     id=",".join([video["_id"] for video in videos]),
-    #     part='snippet, contentDetails'
-    # ).execute()
-    # for index, video in enumerate(results["videos"]):
-    #     duration = video_response["items"][index][
-    #         "contentDetails"]["duration"].replace("PT", "")
-    #     # {[{"_id": _id, "title": "title", "duration": duration}]}
-    #     results["videos"][index]["duration"] = duration
+    if get_duration is True:
+        video_response = youtube.videos().list(
+            id=",".join([video["_id"] for video in videos]),
+            part='snippet,contentDetails'
+        ).execute()
+
+        for index, video in enumerate(results["videos"]):
+            duration = video_response["items"][index][
+                "contentDetails"]["duration"].replace("PT", "")
+            # {[{"_id": _id, "title": title, "duration": duration}]}
+            results["videos"][index]["duration"] = duration
 
     return results
 

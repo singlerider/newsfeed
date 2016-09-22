@@ -2,13 +2,27 @@ var xhr = new XMLHttpRequest();
 xhr.open('GET', '/videos');
 xhr.send(null);
 
+function showStatic() {
+    var staticContainer = document.getElementById('static');
+    staticContainer.className += ' show-static';
+}
+
+function hideStatic() {
+    var staticContainer = document.getElementById('static');
+    staticContainer.className = 'static-container';
+}
+
 function replaceIFrame(id) {
     var prevIFrame = document.getElementById('video');
-    var vidContainer = document.getElementById('vidContainer');
+    var vidContainer = document.getElementById('vid-container');
     vidContainer.removeChild(prevIFrame);
     var iframe = document.createElement('iframe');
+    showStatic();
+    setTimeout(hideStatic, 1000);
     iframe.id = 'video';
-    iframe.src = 'http://www.youtube.com/embed/' + id + '?autoplay=1';
+    iframe.src = 'http://www.youtube.com/embed/' + id + '?autoplay=1&controls=0';
+    iframe.className = 'video';
+    iframe.volume=0;
     vidContainer.appendChild(iframe);
 }
 

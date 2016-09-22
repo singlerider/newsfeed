@@ -1,6 +1,9 @@
 <iframe width="0" height="0" src="https://www.youtube.com/embed/9dCEHXw34P8?controls=0&autoplay=1&start=17" frameborder="0" allowfullscreen></iframe>
 <script src="{{ url_for('static', filename='default-gen.js') }}"></script>
+<script src="{{ url_for('static', filename='generate-static.js') }}"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 <p><a href="{{ data["link"] }}">{{ data["title"] }}</a></p>
-<div id="vidContainer">
-  <iframe id="video" width="1280" height="720" src="https://www.youtube.com/embed/{{ videos }}?autoplay=1" frameborder="0" volume="0" allowfullscreen></iframe>
+<div id="vid-container">
+  <canvas class="static-container" id="static"></canvas>
+  <iframe class="video" id="video" src="https://www.youtube.com/embed/{{ videos }}?autoplay=1" frameborder="0" volume="0" allowfullscreen></iframe>
 </div>

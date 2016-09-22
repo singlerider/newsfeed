@@ -1,0 +1,13 @@
+.static-container {
+    width: 1280px;
+    height: 720px;
+    display: none;
+    position: absolute;
+}
+.video {
+    width: 1280px;
+    height: 720px;
+}
+.show-static {
+    display: block;
+}
