@@ -1,30 +1,30 @@
 #!/usr/bin/python
+import os
 import sys
 
 from apiclient.discovery import build
 from apiclient.errors import HttpError
-from oauth2client.tools import argparser
 
 if __name__ == "__main__":  # if only this file is being tested
-    sys.path.insert(0, '../')  # allow developer key to import
+    sys.path.insert(0, "../")  # allow developer key to import
 
 try:
-    from config.config import DEVELOPER_KEY
-except Exception as error:
-    print(error)
-    print("Run: cp config/config_example.py config/config.py")
-    print("then add your YouTube API developer key to the new config file")
-    sys.exit(1)
+    from config.config import YOUTUBE_API_KEY
+except ImportError:
+    try:  # if the config file is not available
+        YOUTUBE_API_KEY = os.environ["YOUTUBE_API_KEY"]
+    except KeyError as error:
+        print(error)
+        print("Run: cp config/config_example.py config/config.py")
+        print("then add your YouTube API developer key to the new config file")
+        sys.exit(1)
 
-
-# Set DEVELOPER_KEY to the API key value from the APIs & auth > Registered apps
+# Set YOUTUBE_API_KEY to the API key value from auth > Registered apps
 # tab of
 #   https://cloud.google.com/console
 # Please ensure that you have enabled the YouTube Data API for your project.
 YOUTUBE_API_SERVICE_NAME = "youtube"
 YOUTUBE_API_VERSION = "v3"
-
-# https://www.googleapis.com/youtube/v3/videos?id=9bZkp7q19f0&part=contentDetails&key={YOUR_API_KEY}
 
 
 def youtube_search(search_term, get_duration=False):
@@ -38,7 +38,7 @@ def youtube_search(search_term, get_duration=False):
     youtube = build(
         YOUTUBE_API_SERVICE_NAME,
         YOUTUBE_API_VERSION,
-        developerKey=DEVELOPER_KEY
+        developerKey=YOUTUBE_API_KEY
     )
     # Call the search.list method to retrieve results matching the specified
     # query term.
@@ -84,8 +84,8 @@ def youtube_search(search_term, get_duration=False):
     # matching videos, channels, and playlists.
     if get_duration is True:
         video_response = youtube.videos().list(
-            id=",".join([video["_id"] for video in videos]),
-            part='snippet,contentDetails'
+            id=",".join([video_result["_id"] for video_result in videos]),
+            part="snippet,contentDetails"
         ).execute()
 
         for index, video in enumerate(results["videos"]):
@@ -99,6 +99,7 @@ def youtube_search(search_term, get_duration=False):
 
 if __name__ == "__main__":
     try:
-        search("news")
+        youtube_search("news")
     except HttpError as error:
-        print "An HTTP error {0} occurred:\n{1}".format(error.resp.status, error.content)
+        print "An HTTP error {0} occurred:\n{1}".format(
+            error.resp.status, error.content)

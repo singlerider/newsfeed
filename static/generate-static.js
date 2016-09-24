@@ -15,12 +15,12 @@ var makeNoise = function() {
 
     context.putImageData(imgd, 0, 0);
     time = (time + 1) % canvas.height;
-}
+};
 
 var setup = function() {
     canvas = document.getElementById("static");
     context = canvas.getContext("2d");
-}
+};
 
 document.addEventListener("DOMContentLoaded", function() {
     setup();

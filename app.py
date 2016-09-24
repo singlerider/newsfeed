@@ -1,14 +1,12 @@
 #!/usr/bin/env python
 
 import os
-
-import requests
+from datetime import datetime
 
 import lib.scraper as scraper
-from lib.youtube import youtube_search
 from bs4 import BeautifulSoup
-from flask import Flask, render_template, jsonify
-from datetime import datetime
+from flask import Flask, jsonify, render_template
+from lib.youtube import youtube_search
 
 app = Flask(__name__)
 
@@ -40,4 +38,5 @@ if __name__ == "__main__":
     # This allows us to use a plain HTTP callback
     os.environ["DEBUG"] = "1"
     app.secret_key = os.urandom(24)
-    app.run(host="0.0.0.0", port=8080)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
